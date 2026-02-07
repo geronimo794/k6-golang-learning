@@ -34,20 +34,25 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		processStr := fmt.Sprintf("[Process %d]", i)
 
-		fmt.Fprintf(w, "%s Connecting to database...\n", processStr)
 		fmt.Println(processStr, "Connecting to database...")
 
 		conn, err := connect()
 		if err != nil {
+			// Write the response header before writing the response body
+			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "%s Error connecting to database: %v\n", processStr, err)
+
 			fmt.Println(processStr, "Error connecting to database:", err)
 			return
 		}
 		defer conn.Close(context.Background())
-
+		// Write the response header before writing the response body
+		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "%s Connected to database!\n", processStr)
+
 		fmt.Println(processStr, "Connected to database!")
 		fmt.Println("--------------------------------")
+
 		i++
 	})
 	http.ListenAndServe(":8080", nil)
