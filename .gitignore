@@ -1,0 +1,42 @@
+# Go build / binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+k6-golang
+main
+
+# Dependencies / cache
+/vendor/
+go.work
+go.work.sum
+
+# Secrets & env
+.env
+.env.*
+.env.local
+
+# IDE / editors
+.idea/
+.vscode/
+*.swp
+*~
+.project
+.classpath
+.settings/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Test / coverage
+*.out
+coverage.html
+coverage.txt
+
+# Misc
+*.log
+tmp/
+temp/

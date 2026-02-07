@@ -1,0 +1,29 @@
+# Git
+.git/
+.gitignore
+
+# Secrets (use runtime env injection instead)
+.env
+.env.*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+k6-golang
+*.exe
+*.test
+*.out
+/vendor/
+
+# Logs / temp
+*.log
+tmp/
+temp/
+
+# Docs (optional - exclude to slim image)
+*.md
+LICENSE
