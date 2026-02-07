@@ -1,93 +1,154 @@
-# Without PGBouncer
-## 5000 iterations
+# k6 Load Test Results: PGBouncer Comparison
+
+## Summary
+
+| Scenario | Iterations | Avg duration | Failed % | Throughput (req/s) |
+|----------|------------|--------------|----------|--------------------|
+| Without PGBouncer | 5,000 | 5.64 ms | **29.79%** | 175.2 |
+| With PGBouncer | 5,000 | 2.31 ms | **0.00%** | **424.2** |
+| Without PGBouncer | 10,000 | 5.60 ms | **64.87%** | 176.7 |
+| With PGBouncer | 10,000 | 3.15 ms | **0.00%** | 311.2 |
+
+---
+
+## HTTP metrics
+
+| Metric | Without (5k) | With (5k) | Without (10k) | With (10k) |
+|--------|--------------|-----------|---------------|------------|
+| **http_req_duration** | | | | |
+| avg | 5.64 ms | 2.31 ms | 5.60 ms | 3.15 ms |
+| min | 3.73 ms | 1.62 ms | 3.97 ms | 1.86 ms |
+| med | 5.25 ms | 2.20 ms | 5.28 ms | 2.58 ms |
+| max | 53.36 ms | 34.91 ms | 47.40 ms | 30.89 ms |
+| p(90) | 6.98 ms | 2.51 ms | 6.88 ms | 5.25 ms |
+| p(95) | 7.91 ms | 2.84 ms | 7.57 ms | 7.30 ms |
+| **http_req_failed** | 29.79% (1490) | 0.00% (0) | 64.87% (6487) | 0.00% (0) |
+| **http_reqs** | 5000 @ 175.2/s | 5000 @ 424.2/s | 10000 @ 176.7/s | 10000 @ 311.2/s |
+
+---
+
+## Execution metrics
+
+| Metric | Without (5k) | With (5k) | Without (10k) | With (10k) |
+|--------|--------------|-----------|---------------|------------|
+| **iteration_duration** | | | | |
+| avg | 5.69 ms | 2.35 ms | 5.65 ms | 3.20 ms |
+| min | 3.77 ms | 1.65 ms | 4.03 ms | 1.88 ms |
+| med | 5.31 ms | 2.23 ms | 5.33 ms | 2.62 ms |
+| max | 53.47 ms | 35.31 ms | 47.45 ms | 31.12 ms |
+| p(90) | 7.04 ms | 2.55 ms | 6.94 ms | 5.35 ms |
+| p(95) | 7.99 ms | 2.90 ms | 7.63 ms | 7.42 ms |
+| **iterations** | 5000 @ 175.2/s | 5000 @ 424.2/s | 10000 @ 176.7/s | 10000 @ 311.2/s |
+
+---
+
+## Network
+
+| Metric | Without (5k) | With (5k) | Without (10k) | With (10k) |
+|--------|--------------|-----------|---------------|------------|
+| data_received | 1.2 MB (43 kB/s) | 774 kB (66 kB/s) | 3.5 MB (62 kB/s) | 1.5 MB (48 kB/s) |
+| data_sent | 405 kB (14 kB/s) | 405 kB (34 kB/s) | 810 kB (14 kB/s) | 810 kB (25 kB/s) |
+
+---
+
+## Head-to-head (5k iterations)
+
+| Metric | Without PGBouncer | With PGBouncer | Change |
+|--------|-------------------|----------------|--------|
+| Avg request duration | 5.64 ms | 2.31 ms | **−59%** |
+| Failed requests | 29.79% | 0.00% | **−100%** |
+| Throughput | 175.2/s | 424.2/s | **+142%** |
+
+## Head-to-head (10k iterations)
+
+| Metric | Without PGBouncer | With PGBouncer | Change |
+|--------|-------------------|----------------|--------|
+| Avg request duration | 5.60 ms | 3.15 ms | **−44%** |
+| Failed requests | 64.87% | 0.00% | **−100%** |
+| Throughput | 176.7/s | 311.2/s | **+76%** |
+
+---
+
+## Raw output
+
+<details>
+<summary>Without PGBouncer — 5000 iterations</summary>
+
 ```
   █ TOTAL RESULTS 
-
     HTTP
     http_req_duration..............: avg=5.64ms min=3.73ms med=5.25ms max=53.36ms p(90)=6.98ms p(95)=7.91ms
       { expected_response:true }...: avg=5.73ms min=3.73ms med=5.33ms max=53.36ms p(90)=7.12ms p(95)=8.1ms 
     http_req_failed................: 29.79% 1490 out of 5000
     http_reqs......................: 5000   175.172983/s
-
     EXECUTION
     iteration_duration.............: avg=5.69ms min=3.77ms med=5.31ms max=53.47ms p(90)=7.04ms p(95)=7.99ms
     iterations.....................: 5000   175.172983/s
-    vus............................: 1      min=1            max=1
-    vus_max........................: 1      min=1            max=1
-
     NETWORK
     data_received..................: 1.2 MB 43 kB/s
     data_sent......................: 405 kB 14 kB/s
 ```
-## 10000 iterations
+
+</details>
+
+<details>
+<summary>Without PGBouncer — 10000 iterations</summary>
+
 ```
   █ TOTAL RESULTS 
-
     HTTP
     http_req_duration..............: avg=5.6ms  min=3.97ms med=5.28ms max=47.4ms  p(90)=6.88ms p(95)=7.57ms
       { expected_response:true }...: avg=6.25ms min=4.37ms med=5.94ms max=33.46ms p(90)=7.27ms p(95)=7.98ms
     http_req_failed................: 64.87% 6487 out of 10000
     http_reqs......................: 10000  176.692148/s
-
     EXECUTION
     iteration_duration.............: avg=5.65ms min=4.03ms med=5.33ms max=47.45ms p(90)=6.94ms p(95)=7.63ms
     iterations.....................: 10000  176.692148/s
-    vus............................: 1      min=1             max=1
-    vus_max........................: 1      min=1             max=1
-
     NETWORK
     data_received..................: 3.5 MB 62 kB/s
     data_sent......................: 810 kB 14 kB/s
-
-
-
-
 running (00m56.6s), 0/1 VUs, 10000 complete and 0 interrupted iterations
 ```
 
-# With PGBouncer
-## 5000 iterations
-```
-      █ TOTAL RESULTS 
+</details>
 
+<details>
+<summary>With PGBouncer — 5000 iterations</summary>
+
+```
+  █ TOTAL RESULTS 
     HTTP
     http_req_duration..............: avg=2.31ms min=1.62ms med=2.2ms  max=34.91ms p(90)=2.51ms p(95)=2.84ms
       { expected_response:true }...: avg=2.31ms min=1.62ms med=2.2ms  max=34.91ms p(90)=2.51ms p(95)=2.84ms
     http_req_failed................: 0.00%  0 out of 5000
     http_reqs......................: 5000   424.210475/s
-
     EXECUTION
     iteration_duration.............: avg=2.35ms min=1.65ms med=2.23ms max=35.31ms p(90)=2.55ms p(95)=2.9ms 
     iterations.....................: 5000   424.210475/s
-    vus............................: 1      min=1         max=1
-    vus_max........................: 1      min=1         max=1
-
     NETWORK
     data_received..................: 774 kB 66 kB/s
     data_sent......................: 405 kB 34 kB/s
 ```
-## 10000 iterations
+
+</details>
+
+<details>
+<summary>With PGBouncer — 10000 iterations</summary>
+
 ```
   █ TOTAL RESULTS 
-
     HTTP
     http_req_duration..............: avg=3.15ms min=1.86ms med=2.58ms max=30.89ms p(90)=5.25ms p(95)=7.3ms 
       { expected_response:true }...: avg=3.15ms min=1.86ms med=2.58ms max=30.89ms p(90)=5.25ms p(95)=7.3ms 
     http_req_failed................: 0.00%  0 out of 10000
     http_reqs......................: 10000  311.229477/s
-
     EXECUTION
     iteration_duration.............: avg=3.2ms  min=1.88ms med=2.62ms max=31.12ms p(90)=5.35ms p(95)=7.42ms
     iterations.....................: 10000  311.229477/s
-    vus............................: 1      min=1          max=1
-    vus_max........................: 1      min=1          max=1
-
     NETWORK
     data_received..................: 1.5 MB 48 kB/s
     data_sent......................: 810 kB 25 kB/s
-
-
-
-
 running (00m32.1s), 0/1 VUs, 10000 complete and 0 interrupted iterations
 ```
+
+</details>
