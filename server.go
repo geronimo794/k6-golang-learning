@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
@@ -28,7 +29,14 @@ func loadEnv() {
 	}
 }
 func queryData(conn *pgx.Conn) {
-	rows, err := conn.Query(context.Background(), "SELECT id, data_test FROM table_test")
+	id := uuid.New()
+	dataTest := "test " + id.String()
+	// Do INSERT, SELECT, UPDATE, DELETE operations
+	// INSERT
+	conn.Exec(context.Background(), "INSERT INTO table_test (id,data_test) VALUES ($1, $2)", id, dataTest)
+
+	// Select
+	rows, err := conn.Query(context.Background(), "SELECT id, data_test FROM table_test WHERE id = $1", id)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,6 +51,14 @@ func queryData(conn *pgx.Conn) {
 		}
 		fmt.Printf("User ID: %s, Data Test: %s\n", id, data_test)
 	}
+
+	// UPDATE
+	conn.Exec(context.Background(), "UPDATE table_test SET data_test = $1 WHERE id = $2", dataTest, id)
+	fmt.Println("Updated data test: ", dataTest)
+
+	// DELETE
+	conn.Exec(context.Background(), "DELETE FROM table_test WHERE id = $1", id)
+	fmt.Println("Deleted data test: ", id)
 }
 
 func main() {
