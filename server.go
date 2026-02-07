@@ -27,6 +27,23 @@ func loadEnv() {
 		log.Fatal("Error loading .env file")
 	}
 }
+func queryData(conn *pgx.Conn) {
+	rows, err := conn.Query(context.Background(), "SELECT id, data_test FROM table_test")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id string
+		var data_test string
+		err := rows.Scan(&id, &data_test)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("User ID: %s, Data Test: %s\n", id, data_test)
+	}
+}
 
 func main() {
 	loadEnv()
@@ -50,6 +67,8 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "%s Connected to database!\n", processStr)
 
+		// Log to console
+		queryData(conn)
 		fmt.Println(processStr, "Connected to database!")
 		fmt.Println("--------------------------------")
 
