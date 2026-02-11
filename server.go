@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -87,7 +89,13 @@ func main() {
 		queryData(conn)
 		fmt.Println(processStr, "Connected to database!")
 		fmt.Println("--------------------------------")
+		// Random sleep between 0 and 5 seconds
+		randomSleep := rand.Intn(5)
 
+		// Sleep x Seconds
+		fmt.Println(processStr, "Sleeping for", randomSleep, "seconds...")
+		time.Sleep(time.Duration(randomSleep) * time.Second)
+		fmt.Println(processStr, "Woke up from sleep")
 		i++
 	})
 	http.ListenAndServe(":8080", nil)
